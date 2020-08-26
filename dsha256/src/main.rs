@@ -24,3 +24,27 @@ fn main() -> io::Result<()> {
     println!("{:x}", hash2);
     Ok(())
 }
+
+/// Performs a double sha256 hash.
+///
+/// ```
+/// assert_eq!(dsha256(), "")
+/// ```
+fn dsha256(buf: &Vec) -> &Vec {
+    let mut hasher = Sha256::new();
+
+    // write input message
+    hasher.update(buffer);
+
+    // read hash digest and consume hasher
+    let hash1 = hasher.finalize();
+    // println!("digest1: {:x}", hash1);
+
+    hasher = Sha256::new();
+    hasher.update(hash1);
+    let hash2 = hasher.finalize();
+
+    // println!("digest2: {:x}", hash2);
+
+    println!("{:x}", hash2);
+}
