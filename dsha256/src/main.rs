@@ -1,27 +1,14 @@
 // double sha256
-use sha2::{Sha256, Digest};
+use sha2::{Digest, Sha256};
 use std::io::{self, Read};
 
 fn main() -> io::Result<()> {
     let mut buffer = Vec::new();
     io::stdin().read_to_end(&mut buffer)?;
 
-    let mut hasher = Sha256::new();
+    let vec_hash = dsha256(&buffer);
 
-    // write input message
-    hasher.update(buffer);
-
-    // read hash digest and consume hasher
-    let hash1 = hasher.finalize();
-    // println!("digest1: {:x}", hash1);
-
-    hasher = Sha256::new();
-    hasher.update(hash1);
-    let hash2 = hasher.finalize();
-
-    // println!("digest2: {:x}", hash2);
-
-    println!("{:x}", hash2);
+    println!("{}", hex::encode(vec_hash));
     Ok(())
 }
 
@@ -30,11 +17,11 @@ fn main() -> io::Result<()> {
 /// ```
 /// assert_eq!(dsha256(), "")
 /// ```
-fn dsha256(buf: &Vec) -> &Vec {
+fn dsha256(buf: &[u8]) -> Vec<u8> {
     let mut hasher = Sha256::new();
 
     // write input message
-    hasher.update(buffer);
+    hasher.update(buf);
 
     // read hash digest and consume hasher
     let hash1 = hasher.finalize();
@@ -42,9 +29,6 @@ fn dsha256(buf: &Vec) -> &Vec {
 
     hasher = Sha256::new();
     hasher.update(hash1);
-    let hash2 = hasher.finalize();
 
-    // println!("digest2: {:x}", hash2);
-
-    println!("{:x}", hash2);
+    hasher.finalize().to_vec()
 }
