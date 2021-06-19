@@ -1,4 +1,5 @@
 use std::env;
+use std::fs;
 use std::path::Path;
 
 const DEFAULT_IFS: char = ':';
@@ -25,7 +26,15 @@ fn main() {
             println!("WARN: path elem {} does not exist", elem);
             continue;
         }
+        if !path.is_dir() {
+            println!("WARN: path elem {} is not a directory", elem);
+            continue;
+        }
         println!("elem: {}", elem);
+
+        for entry in fs::read_dir(path).unwrap() {
+            println!("\tentry: {:?}", entry);
+        }
 
         // TODO:
         //  matches = matchdir(pathelem, pattern)
