@@ -33,6 +33,9 @@ fn main() {
         println!("elem: {}", elem);
 
         for entry in fs::read_dir(path).unwrap() {
+            // TODO: Make pattern a regex
+            // TODO: Get only the basename of the entry
+            // does the basename match the pattern?
             println!("\tentry: {:?}", entry);
         }
 
