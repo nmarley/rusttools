@@ -1,3 +1,4 @@
+use regex::Regex;
 use std::env;
 use std::fs;
 use std::path::Path;
@@ -10,8 +11,13 @@ fn main() {
         eprintln!("usage: {} <pattern>", args.next().unwrap());
         std::process::exit(1);
     }
+
     let pattern = args.nth(1).unwrap();
     println!("pattern: {}", pattern);
+
+    // Make pattern a regex
+    let re_pattern = Regex::new(&pattern).unwrap();
+    println!("re_pattern: {:?}", re_pattern);
 
     let ifs = match env::var("IFS") {
         Ok(val) => val.chars().nth(0).unwrap(),
@@ -33,10 +39,19 @@ fn main() {
         println!("elem: {}", elem);
 
         for entry in fs::read_dir(path).unwrap() {
-            // TODO: Make pattern a regex
-            // TODO: Get only the basename of the entry
+            // Get only the basename of the entry
+            // println!("\tentry: {:?}", entry);
+            let entry = entry.unwrap();
+            let basename = entry.file_name();
+
             // does the basename match the pattern?
-            println!("\tentry: {:?}", entry);
+            println!("\tbasename: {:?}", basename);
+
+            let abspath = Path::new(entry.path());
+            let metadata = entry.metadata();
+            let mode = metadata.permissions().mode();
+            if re_pattern.is_match(basename) && abspath.exists() && mode&WIPFINISHME != STH {
+            }
         }
 
         // TODO:
