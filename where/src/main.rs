@@ -1,6 +1,7 @@
 use regex::Regex;
 use std::env;
 use std::fs;
+use std::os::unix::fs::PermissionsExt;
 use std::path::Path;
 
 const DEFAULT_IFS: char = ':';
@@ -47,11 +48,11 @@ fn main() {
             // does the basename match the pattern?
             println!("\tbasename: {:?}", basename);
 
-            let abspath = Path::new(entry.path());
-            let metadata = entry.metadata();
-            let mode = metadata.permissions().mode();
-            if re_pattern.is_match(basename) && abspath.exists() && mode&WIPFINISHME != STH {
-            }
+            let _abspath = Path::new(&entry.path());
+            let metadata = entry.metadata().unwrap();
+            let mode = metadata.permissions().mode() & 0777;
+            println!("mode: {:?}", mode);
+            // if re_pattern.is_match(basename) && abspath.exists() && mode & WIPFINISHME != STH {}
         }
 
         // TODO:
