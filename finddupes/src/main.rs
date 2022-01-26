@@ -34,7 +34,9 @@ fn main() {
             let data = fs::read(entry.path()).unwrap();
             let hash = sha256(&data);
             // println!("{}", hex::encode(&hash));
-            let list = map_hash_paths.entry(hash).or_insert(vec![]);
+            let list = map_hash_paths
+                .entry(hash)
+                .or_insert_with(Vec::<PathBuf>::new);
             list.push(entry.path().to_path_buf());
         }
 

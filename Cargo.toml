@@ -3,4 +3,5 @@
 members = [
     "dsha256",
     "finddupes",
+    "where",
 ]
