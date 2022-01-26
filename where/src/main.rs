@@ -14,58 +14,51 @@ fn main() {
     }
 
     let pattern = args.nth(1).unwrap();
-    println!("pattern: {}", pattern);
+    // dbg!(&pattern);
 
     // Make pattern a regex
     let re_pattern = Regex::new(&pattern).unwrap();
-    println!("re_pattern: {:?}", re_pattern);
+    // dbg!(&re_pattern);
 
     let ifs = match env::var("IFS") {
-        Ok(val) => val.chars().nth(0).unwrap(),
+        Ok(val) => val.chars().next().unwrap(),
         Err(_) => DEFAULT_IFS,
     };
-    println!("ifs: {}", ifs);
+    // dbg!(&ifs);
 
     let path = env::var("PATH").unwrap();
     for elem in path.split(ifs) {
         let path = Path::new(elem);
         if !path.exists() {
-            println!("WARN: path elem {} does not exist", elem);
+            // println!("WARN: path elem {} does not exist", elem);
             continue;
         }
         if !path.is_dir() {
-            println!("WARN: path elem {} is not a directory", elem);
+            // println!("WARN: path elem {} is not a directory", elem);
             continue;
         }
-        println!("elem: {}", elem);
+        // dbg!(&elem);
 
         for entry in fs::read_dir(path).unwrap() {
-            // Get only the basename of the entry
-            // println!("\tentry: {:?}", entry);
             let entry = entry.unwrap();
-            let basename = entry.file_name();
+            // dbg!(&entry);
+            // Get only the basename of the entry for matching
+            let basename = entry.file_name().into_string().unwrap();
+
+            let abspath = entry.path();
+            // dbg!(&abspath);
+
+            let metadata = entry.metadata().unwrap();
+            let perms = metadata.permissions().mode() & 0o0777;
+            // dbg!(&perms);
+
+            let is_file = entry.file_type().unwrap().is_file();
+            let is_executable = perms & 0o111 != 0;
 
             // does the basename match the pattern?
-            println!("\tbasename: {:?}", basename);
-
-            let _abspath = Path::new(&entry.path());
-            let metadata = entry.metadata().unwrap();
-            let mode = metadata.permissions().mode() & 0777;
-            println!("mode: {:?}", mode);
-            // if re_pattern.is_match(basename) && abspath.exists() && mode & WIPFINISHME != STH {}
+            if re_pattern.is_match(&basename) && abspath.exists() && is_file && is_executable {
+                println!("{}", abspath.into_os_string().into_string().unwrap());
+            }
         }
-
-        // TODO:
-        //  matches = matchdir(pathelem, pattern)
-        //  matches.each do |m|
-        //    next  unless File.exist?(m) && File.executable?(m)
-        //    puts m
-        //  end
     }
 }
-
-// TODO:
-// def matchdir(dir, pattern)
-//   entries = (Dir.entries(dir) - ['.', '..']).grep(/#{pattern}/)
-//   entries.map { |entry| File.join(dir, entry) }
-// end
