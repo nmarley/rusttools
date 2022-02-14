@@ -53,10 +53,15 @@ fn main() {
             // dbg!(&perms);
 
             let is_file = entry.file_type().unwrap().is_file();
+            let is_link = entry.file_type().unwrap().is_symlink();
             let is_executable = perms & 0o111 != 0;
 
             // does the basename match the pattern?
-            if re_pattern.is_match(&basename) && abspath.exists() && is_file && is_executable {
+            if re_pattern.is_match(&basename)
+                && abspath.exists()
+                && (is_file || is_link)
+                && is_executable
+            {
                 println!("{}", abspath.into_os_string().into_string().unwrap());
             }
         }
