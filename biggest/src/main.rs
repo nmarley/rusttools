@@ -42,6 +42,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     if count > 0 {
         println!("smallest: {:?}, {} bytes", smallest, min);
         println!("biggest: {:?}, {} bytes", biggest, max);
+        println!("count: {} files", count);
     } else {
         eprintln!("error: no files read");
         process::exit(1);
