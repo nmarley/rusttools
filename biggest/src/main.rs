@@ -2,6 +2,9 @@ use std::path::PathBuf;
 use std::{env, fs, process};
 use walkdir::WalkDir;
 
+// TODO: Can add option to ignore path(s), e.g.:
+// `biggest --ignore .git --ignore temp .`
+
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let mut args = env::args();
     if args.len() == 1 {
