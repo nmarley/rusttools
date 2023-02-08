@@ -1,3 +1,4 @@
+#![allow(clippy::uninlined_format_args)]
 use std::path::PathBuf;
 use std::{env, fs, process};
 use walkdir::WalkDir;

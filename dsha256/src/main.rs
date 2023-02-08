@@ -1,3 +1,4 @@
+#![allow(clippy::uninlined_format_args)]
 // double sha256
 use sha2::{Digest, Sha256};
 use std::io::{self, Read};
