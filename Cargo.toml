@@ -4,5 +4,6 @@ members = [
     "biggest",
     "dsha256",
     "finddupes",
+    "summ",
     "where",
 ]
