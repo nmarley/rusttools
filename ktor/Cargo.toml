@@ -1,0 +1,8 @@
+[package]
+name = "ktor"
+version = "0.1.0"
+authors = ["Nathan Marley <nathan.marley@gmail.com>"]
+edition = "2021"
+
+[dependencies]
+sysinfo = "0.23"

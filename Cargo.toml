@@ -6,6 +6,7 @@ members = [
     "biggest",
     "dsha256",
     "finddupes",
+    "ktor",
     "summ",
     "where",
 ]
