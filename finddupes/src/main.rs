@@ -43,7 +43,7 @@ fn main() {
 
         for (hash, path_vec) in &map_hash_paths {
             if path_vec.len() > 1 {
-                println!("Dupe found, sha256sum: {}", hex::encode(&hash));
+                println!("Dupe found, sha256sum: {}", hex::encode(hash));
                 for path in path_vec {
                     println!("\tpath: {}", path.display());
                 }
