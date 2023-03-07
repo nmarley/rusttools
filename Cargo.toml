@@ -1,6 +1,7 @@
 [workspace]
 
 members = [
+    "b64url",
     "biggest",
     "dsha256",
     "finddupes",
