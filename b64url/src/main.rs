@@ -1,9 +1,26 @@
-// use clap::Parser;
-// TODO: clap
 use base64::{engine::general_purpose, Engine as _};
+use clap::Parser;
 use std::io::{self, Read};
 
+#[derive(Parser, Debug)]
+#[command(author, version, about, long_about = None)]
+pub struct Args {
+    /// Disable hex output
+    #[clap(long = "disable-hex", default_value_t=false)]
+    pub disable_hex: bool,
+
+    /// Disable str output
+    #[clap(long = "disable-str", default_value_t=false)]
+    pub disable_str: bool,
+
+    /// Suppress field labels
+    #[clap(long = "suppress-labels", default_value_t=false)]
+    pub suppress_labels: bool,
+}
+
 fn main() -> io::Result<()> {
+    let args = Args::parse();
+
     let mut buffer = Vec::new();
     io::stdin().read_to_end(&mut buffer)?;
 
@@ -12,17 +29,28 @@ fn main() -> io::Result<()> {
 
     let decoded = general_purpose::URL_SAFE_NO_PAD.decode(&buffer).unwrap();
 
-    let hexval = hex::encode(&decoded);
-    println!("hex: {}", hexval);
+    if !args.disable_hex {
+        let field_name = match args.suppress_labels {
+            true => "",
+            false => "hex: ",
+        };
+        println!("{}{}", field_name, hex::encode(&decoded));
+    }
 
-    match std::str::from_utf8(&decoded) {
-        Ok(u) => {
-            println!("str: {}", u)
-        }
-        Err(_e) => {
-            println!("invalid utf8 - unable to convert")
-        }
-    };
+    if !args.disable_str {
+        match std::str::from_utf8(&decoded) {
+            Ok(u) => {
+                let field_name = match args.suppress_labels {
+                    true => "",
+                    false => "str: ",
+                };
+                println!("{}{}", field_name, u);
+            }
+            Err(_e) => {
+                println!("invalid utf8 - unable to convert")
+            }
+        };
+    }
 
     Ok(())
 }
