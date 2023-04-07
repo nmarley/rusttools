@@ -1,5 +1,6 @@
 #![allow(clippy::uninlined_format_args)]
 use regex::Regex;
+use std::collections::HashSet;
 use std::env;
 use std::fs;
 use std::os::unix::fs::PermissionsExt;
@@ -27,6 +28,7 @@ fn main() {
     };
     // dbg!(&ifs);
 
+    let mut seen_path_elements: HashSet<&str> = HashSet::new();
     let path = env::var("PATH").unwrap();
     for elem in path.split(ifs) {
         let path = Path::new(elem);
@@ -39,6 +41,11 @@ fn main() {
             continue;
         }
         // dbg!(&elem);
+
+        if seen_path_elements.contains(elem) {
+            // println!("WARN: path elem {} already seen", elem);
+            continue;
+        }
 
         for entry in fs::read_dir(path).unwrap() {
             let entry = entry.unwrap();
@@ -66,5 +73,7 @@ fn main() {
                 println!("{}", abspath.into_os_string().into_string().unwrap());
             }
         }
+
+        seen_path_elements.insert(elem);
     }
 }
