@@ -6,15 +6,15 @@ use std::io::{self, Read};
 #[command(author, version, about, long_about = None)]
 pub struct Args {
     /// Disable hex output
-    #[clap(long = "disable-hex", default_value_t=false)]
+    #[clap(long = "disable-hex", default_value_t = false)]
     pub disable_hex: bool,
 
     /// Disable str output
-    #[clap(long = "disable-str", default_value_t=false)]
+    #[clap(long = "disable-str", default_value_t = false)]
     pub disable_str: bool,
 
     /// Suppress field labels
-    #[clap(long = "suppress-labels", default_value_t=false)]
+    #[clap(long = "suppress-labels", default_value_t = false)]
     pub suppress_labels: bool,
 }
 
