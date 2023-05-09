@@ -4,6 +4,7 @@ members = [
     "b64url",
     "b64tohex",
     "biggest",
+    "bintool",
     "dsha256",
     "finddupes",
     "summ",
