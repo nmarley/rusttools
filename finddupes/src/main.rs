@@ -13,16 +13,10 @@ fn main() {
         std::process::exit(1);
     }
 
-    for filename in args.skip(1) {
-        // TODO: stat filename
-        // skip non-dirs
+    let mut map_hash_paths = HashMap::<Vec<u8>, Vec<PathBuf>>::new();
 
-        // if filename not dir then skip
-        // open dir and read all recursively
-        // ignore '.' and '..'
+    for filename in args.skip(1) {
         // hash 'file' and add PATH to list => map[hash][list of paths]
-        // 'dir's should be walked
-        let mut map_hash_paths = HashMap::<Vec<u8>, Vec<PathBuf>>::new();
         for entry in WalkDir::new(filename).into_iter().filter_map(|e| e.ok()) {
             if !entry.file_type().is_file() {
                 continue;
@@ -35,20 +29,25 @@ fn main() {
             let data = fs::read(entry.path()).unwrap();
             let hash = sha256(&data);
             // println!("{}", hex::encode(&hash));
+
             let list = map_hash_paths
                 .entry(hash)
                 .or_insert_with(Vec::<PathBuf>::new);
             list.push(entry.path().to_path_buf());
         }
+    }
 
-        for (hash, path_vec) in &map_hash_paths {
-            if path_vec.len() > 1 {
-                println!("Dupe found, sha256sum: {}", hex::encode(hash));
-                for path in path_vec {
-                    println!("\tpath: {}", path.display());
-                }
-                println!()
+    for (hash, path_vec) in &map_hash_paths {
+        // println!("hash: {}", hex::encode(&hash));
+        // println!("path_vec: {:?}", path_vec);
+        // println!("========================================================================");
+
+        if path_vec.len() > 1 {
+            println!("Dupe found, sha256sum: {}", hex::encode(hash));
+            for path in path_vec {
+                println!("\tpath: {}", path.display());
             }
+            println!()
         }
     }
 }
