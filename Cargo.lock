@@ -12,6 +12,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "b64tohex"
+version = "0.1.0"
+dependencies = [
+ "base64",
+ "clap",
+ "hex",
+]
+
+[[package]]
 name = "b64url"
 version = "0.1.0"
 dependencies = [

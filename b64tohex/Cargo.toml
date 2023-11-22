@@ -1,0 +1,12 @@
+[package]
+name = "b64tohex"
+version = "0.1.0"
+authors = ["Nathan Marley <nathan.marley@gmail.com>"]
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+base64 = "0"
+clap = { version = "4", features = ["derive"] }
+hex = "0.4"

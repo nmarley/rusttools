@@ -2,6 +2,7 @@
 
 members = [
     "b64url",
+    "b64tohex",
     "biggest",
     "dsha256",
     "finddupes",
