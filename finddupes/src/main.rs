@@ -30,9 +30,7 @@ fn main() {
             let hash = sha256(&data);
             // println!("{}", hex::encode(&hash));
 
-            let list = map_hash_paths
-                .entry(hash)
-                .or_insert_with(Vec::<PathBuf>::new);
+            let list = map_hash_paths.entry(hash).or_default();
             list.push(entry.path().to_path_buf());
         }
     }
