@@ -2,9 +2,10 @@
 
 resolver = "2"
 members = [
-    "b64url",
     "b64tohex",
+    "b64url",
     "biggest",
+    "dq",
     "dsha256",
     "finddupes",
     "hamming",
