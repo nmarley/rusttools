@@ -7,11 +7,11 @@ use std::io::{Read, Seek, Write};
 #[command(author, version, about, long_about = Some("dq (dumb quotes) replaces smart quotes with dumb quotes, used primarily when an LLM generates a block of text with smart quotes that you didn't want"))]
 pub struct Args {
     /// Also replace em dashes (—) with double hyphens (--)
-    #[arg(long, action = clap::ArgAction::SetTrue)]
+    #[arg(long, default_value = "true")]
     em_dash: bool,
 
     /// Also replace en dashes (–) with single hyphens (-)
-    #[arg(long, action = clap::ArgAction::SetTrue)]
+    #[arg(long, default_value = "true")]
     en_dash: bool,
 
     /// Files to process
