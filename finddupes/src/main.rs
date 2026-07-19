@@ -2,8 +2,9 @@
 use sha2::{Digest, Sha256};
 use std::collections::HashMap;
 use std::env;
-use std::fs;
-use std::path::PathBuf;
+use std::fs::File;
+use std::io::{BufReader, Read};
+use std::path::{Path, PathBuf};
 use walkdir::WalkDir;
 
 fn main() {
@@ -41,11 +42,10 @@ fn main() {
         }
 
         for path in path_vec {
-            let data = match fs::read(path) {
-                Ok(d) => d,
+            let hash = match sha256_file(path) {
+                Ok(h) => h,
                 Err(_) => continue,
             };
-            let hash = sha256(&data);
             map_hash_paths.entry(hash).or_default().push(path.clone());
         }
     }
@@ -61,8 +61,19 @@ fn main() {
     }
 }
 
-fn sha256(buf: &[u8]) -> Vec<u8> {
+fn sha256_file(path: &Path) -> std::io::Result<Vec<u8>> {
+    let file = File::open(path)?;
+    let mut reader = BufReader::new(file);
     let mut hasher = Sha256::new();
-    hasher.update(buf);
-    hasher.finalize().to_vec()
+    let mut buf = [0u8; 64 * 1024];
+
+    loop {
+        let n = reader.read(&mut buf)?;
+        if n == 0 {
+            break;
+        }
+        hasher.update(&buf[..n]);
+    }
+
+    Ok(hasher.finalize().to_vec())
 }
