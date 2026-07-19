@@ -1,9 +1,7 @@
 #![allow(clippy::uninlined_format_args)]
-use sha2::{Digest, Sha256};
 use std::collections::HashMap;
 use std::env;
 use std::fs::File;
-use std::io::{BufReader, Read};
 use std::path::{Path, PathBuf};
 use walkdir::WalkDir;
 
@@ -34,7 +32,7 @@ fn main() {
         }
     }
 
-    let mut map_hash_paths = HashMap::<Vec<u8>, Vec<PathBuf>>::new();
+    let mut map_hash_paths = HashMap::<[u8; 32], Vec<PathBuf>>::new();
 
     for path_vec in map_size_paths.values() {
         if path_vec.len() < 2 {
@@ -42,7 +40,7 @@ fn main() {
         }
 
         for path in path_vec {
-            let hash = match sha256_file(path) {
+            let hash = match blake3_file(path) {
                 Ok(h) => h,
                 Err(_) => continue,
             };
@@ -52,7 +50,7 @@ fn main() {
 
     for (hash, path_vec) in &map_hash_paths {
         if path_vec.len() > 1 {
-            println!("Dupe found, sha256sum: {}", hex::encode(hash));
+            println!("Dupe found, blake3: {}", hex::encode(hash));
             for path in path_vec {
                 println!("\tpath: {}", path.display());
             }
@@ -61,19 +59,9 @@ fn main() {
     }
 }
 
-fn sha256_file(path: &Path) -> std::io::Result<Vec<u8>> {
+fn blake3_file(path: &Path) -> std::io::Result<[u8; 32]> {
     let file = File::open(path)?;
-    let mut reader = BufReader::new(file);
-    let mut hasher = Sha256::new();
-    let mut buf = [0u8; 64 * 1024];
-
-    loop {
-        let n = reader.read(&mut buf)?;
-        if n == 0 {
-            break;
-        }
-        hasher.update(&buf[..n]);
-    }
-
-    Ok(hasher.finalize().to_vec())
+    let mut hasher = blake3::Hasher::new();
+    hasher.update_reader(file)?;
+    Ok(*hasher.finalize().as_bytes())
 }
