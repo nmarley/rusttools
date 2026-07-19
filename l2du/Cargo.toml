@@ -1,0 +1,8 @@
+[package]
+name = "l2du"
+version = "0.1.0"
+authors = ["Nathan Marley <nathan.marley@gmail.com>"]
+edition = "2021"
+
+[dependencies]
+chrono = "0.4"

@@ -9,6 +9,12 @@ members = [
     "dsha256",
     "finddupes",
     "hamming",
+    "l2du",
+    "lc",
+    "longest",
+    "rando",
+    "spicnspan",
     "summ",
+    "uc",
     "where",
 ]
