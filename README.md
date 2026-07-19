@@ -4,27 +4,26 @@
 
 ## Install
 
-From the repo root, install any tool into `~/.cargo/bin`:
+Requires [just](https://github.com/casey/just). From the repo root:
 
 ```sh
-cargo install --path <tool>
+just install
 ```
 
-Examples:
+That installs every workspace tool into `~/.cargo/bin`. Bare `cargo install` fails here because the root manifest is a virtual workspace.
+
+One tool only:
+
+```sh
+just install-one finddupes
+```
+
+Or with Cargo directly:
 
 ```sh
 cargo install --path finddupes
-cargo install --path rando
-cargo install --path lc
+cargo install --path finddupes --force   # after local changes
 ```
-
-Reinstall after changes with `--force`:
-
-```sh
-cargo install --path finddupes --force
-```
-
-List workspace members with `cargo metadata --no-deps --format-version 1` or by looking at the root `Cargo.toml`.
 
 ## Build
 
